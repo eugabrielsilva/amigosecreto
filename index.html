@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.png">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <title>Sorteador Amigo Secreto</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Sorteador Amigo Secreto</h1>
+        <h5>Adicione os participantes:</h5>
+        <div class="form">
+            <div class="form">
+                <input onkeyup="enter(event)" type="text" id="nome" class="form-control" placeholder="Nome">
+                <input onkeyup="enter(event)" type="email" id="email" class="form-control ml-2" placeholder="E-mail">
+                <button onclick="adicionar()" class="btn btn-success ml-3">Adicionar</button>
+                <button onclick="limpar()" class="btn btn-light ml-2">Limpar</button>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <th>Nome</th>
+                <th>E-mail</th>
+            </thead>
+            <tbody id="participantes"></tbody>
+        </table>
+        <button onclick="sortear()" id="sortear" class="btn btn-primary mt-2 mb-3">Realizar sorteio</button>
+        <div class="copy">
+            Desenvolvido por <a href="https://eugabrielsilva.tk" target="_blank">Gabriel Silva</a>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

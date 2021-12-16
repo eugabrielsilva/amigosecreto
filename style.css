@@ -1,0 +1,58 @@
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+h1 {
+    color: #d81b60;
+}
+
+.container {
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.form {
+    max-width: 700px;
+    display: flex;
+    align-items: center;
+    margin: auto;
+    margin-top: 10px;
+}
+
+table {
+    background-color: #fafafa;
+    max-width: 700px;
+    margin: 20px auto;
+}
+
+table a {
+    margin-left: 5px;
+    color: red;
+    font-weight: 800;
+}
+
+table a:hover {
+    color: red;
+    text-decoration: none;
+}
+
+.copy {
+    font-size: 14px;
+    color: gray;
+    font-style: italic;
+}
+
+.copy a {
+    color: gray;
+    border-bottom: 1px dotted gray;
+}
+
+.copy a:hover {
+    text-decoration: none;
+    border-color: #d81b60;
+    color: #d81b60;
+}
