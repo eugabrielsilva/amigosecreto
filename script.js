@@ -5,6 +5,7 @@ let emails = [];
 // Elementos
 let inpNome = document.getElementById('nome');
 let inpEmail = document.getElementById('email');
+let inpNomeSorteio = document.getElementById('nome-sorteio');
 let tbParticipantes = document.getElementById('participantes');
 let btnSortear = document.getElementById('sortear');
 
@@ -73,19 +74,26 @@ function remover(email, event) {
  */
 function sortear() {
     if(participantes.length < 3) return alert('Adicione pelo menos 3 participantes!');
+    if(inpNomeSorteio.value.length == 0) return alert('Especifique o nome do sorteio!');
     if(confirm('Confirma todos os dados para realizar o sorteio?')) {
         btnSortear.innerHTML = 'Aguarde...';
         btnSortear.disabled = true;
 
-        $.post('sortear.php', {participantes: participantes}, function(response) {
-            if(response == 'success') {
+        $.post('sortear.php', {participantes: participantes, nome: inpNomeSorteio.value}, function(response) {
+            if(response == 'Sucesso!') {
                 btnSortear.innerHTML = 'Sorteio realizado!';
                 alert('Sorteio realizado com sucesso!');
             } else {
                 btnSortear.innerHTML = 'Realizar sorteio';
                 btnSortear.disabled = false;
                 alert('Ocorreu um erro ao realizar o sorteio!');
+                console.log(response);
             }
+        }).fail(function(error) {
+            btnSortear.innerHTML = 'Realizar sorteio';
+            btnSortear.disabled = false;
+            alert('Ocorreu um erro ao realizar o sorteio!');
+            console.log(error);
         });
     }
 }

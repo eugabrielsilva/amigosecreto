@@ -1,16 +1,23 @@
 <?php
 
-// Especifica formato de saída
-header('Content-type: text/plain');
-
 // Valida dados de entrada
-if (empty($_POST['participantes'])) {
-    print('fail');
+if (empty($_POST['participantes']) || empty($_POST['nome'])) {
+    header('Location: ./');
     exit;
 }
 
+// Dependências
+require('lib/Config.php');
+require('lib/Exception.php');
+require('lib/PHPMailer.php');
+require('lib/SMTP.php');
+
+// Especifica formato de saída
+header('Content-type: text/plain');
+
 // Obtém os dados da requisição
 $participantes = $_POST['participantes'];
+$nome = $_POST['nome'];
 
 // Armazena as possibilidades de amigo como os participantes e embaralha a lista
 $possibilidades = $participantes;
@@ -37,10 +44,8 @@ foreach ($participantes as $key => $participante) {
 
             // Encerra o loop
             $sorteado = true;
-
-            // Se o último participante que sobrou sorteou a si mesmo
         } else if (count($possibilidades) == 1) {
-            // Troca seu amigo com o do primeiro participante
+            // Se o último participante que sobrou sorteou a si mesmo, troca seu amigo com o do primeiro participante
             $participantes[$key]['amigo'] = $participantes[0]['amigo'];
             $participantes[0]['amigo'] = $participantes[$key];
 
@@ -50,10 +55,29 @@ foreach ($participantes as $key => $participante) {
     }
 }
 
+// Cria o sistema de envio de e-mails
+$mail = new PHPMailer\PHPMailer\PHPMailer(true);
+$mail->isSMTP();
+$mail->SMTPAuth = true;
+$mail->SMTPSecure = SMTP_SECURE;
+$mail->Host = SMTP_HOST;
+$mail->Username = SMTP_USER;
+$mail->Password = SMTP_PASSWORD;
+$mail->Port = SMTP_PORT;
+$mail->setFrom(SMTP_USER, 'Sorteio Amigo Secreto');
+$mail->isHTML();
+$mail->Subject = 'Sorteio Amigo Secreto | ' . $nome;
+
 // Envia e-mails
 foreach ($participantes as $participante) {
-    mail($participante['email'], 'Amigo Secreto', 'Seu amigo secreto é: ' . $participante['amigo']['nome']);
+    $mail->clearAddresses();
+    $mail->addAddress($participante['email'], $participante['nome']);
+    $mail->Body = '<h3>Sorteio Amigo Secreto | ' . $nome . '</h3><br>
+                   Seu amigo secreto é: <strong>' . $participante['amigo']['nome'] . '</strong>!<br><br>
+                   Boa festa!
+                   <hr>';
+    $mail->send();
 }
 
 // Printa resultado final
-print('success');
+print('Sucesso!');
