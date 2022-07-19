@@ -18,7 +18,8 @@ function adicionar() {
     let email = inpEmail.value.trim().toLowerCase();
 
     // Valida os dados
-    if(nome == '' || email == '') return;
+    if(nome == '' || email == '') return alert('Insira o nome e e-mail do participante!');
+    if(!/\S+@\S+\.\S+/.test(email)) return alert('Insira um e-mail válido!');
     if(emails.includes(email)) return alert('Este e-mail já está sendo usado por outro participante!');
 
     // Adiciona na lista de participantes e de e-mails

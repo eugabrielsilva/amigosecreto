@@ -58,24 +58,24 @@ foreach ($participantes as $key => $participante) {
 // Cria o sistema de envio de e-mails
 $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 $mail->isSMTP();
+$mail->CharSet = 'utf-8';
 $mail->SMTPAuth = true;
 $mail->SMTPSecure = SMTP_SECURE;
 $mail->Host = SMTP_HOST;
 $mail->Username = SMTP_USER;
 $mail->Password = SMTP_PASSWORD;
 $mail->Port = SMTP_PORT;
-$mail->setFrom(SMTP_USER, 'Sorteio Amigo Secreto');
+$mail->setFrom(SMTP_USER, 'Amigo Secreto');
 $mail->isHTML();
-$mail->Subject = 'Sorteio Amigo Secreto | ' . $nome;
+$mail->Subject = 'Amigo Secreto | ' . $nome;
 
 // Envia e-mails
 foreach ($participantes as $participante) {
     $mail->clearAddresses();
     $mail->addAddress($participante['email'], $participante['nome']);
-    $mail->Body = '<h3>Sorteio Amigo Secreto | ' . $nome . '</h3><br>
+    $mail->Body = '<h3>Sorteio Amigo Secreto | ' . $nome . '</h3>
                    Seu amigo secreto é: <strong>' . $participante['amigo']['nome'] . '</strong>!<br><br>
-                   Boa festa!
-                   <hr>';
+                   Boa festa!';
     $mail->send();
 }
 

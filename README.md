@@ -5,4 +5,10 @@ Esta simples aplicação web tem como objetivo automatizar um sorteio de Amigo S
 
 ### Requisitos
 - PHP versão 7.4 ou superior
-- Suporte a envio de e-mails pela função PHP `mail()`
+- Conta de e-mail com suporte a envio SMTP
+
+### Configuração
+Inicialmente, é necessário configurar a conta de e-mail que será usada para disparar os e-mails via SMTP para cada participante. As configurações estão no arquivo `lib/Config.php`. Depois disso a aplicação estará pronta para realizar os sorteios.
+
+### Créditos
+Desenvolvido por [Gabriel Silva](https://eugabrielsilva.tk).
