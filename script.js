@@ -1,123 +1,105 @@
-// Dados
-let participantes = [];
-let emails = [];
+const app = angular.module('app', []);
 
-// Elementos
-let inpNome = document.getElementById('nome');
-let inpEmail = document.getElementById('email');
-let inpNomeSorteio = document.getElementById('nome-sorteio');
-let tbParticipantes = document.getElementById('participantes');
-let btnSortear = document.getElementById('sortear');
+app.controller('MainController', function($scope, $http, $httpParamSerializerJQLike) {
 
-/**
- * Adiciona um participante na lista.
- */
-function adicionar() {
-    // Obtém os dados
-    let nome = inpNome.value.trim();
-    let email = inpEmail.value.trim().toLowerCase();
+    // Valores iniciais
+    $scope.participantes = [];
+    $scope.nome = '';
+    $scope.email = '';
+    $scope.sorteio = '';
+    $scope.status = 'Realizar sorteio';
+    $scope.disabled = false;
 
-    // Valida os dados
-    if(nome == '' || email == '') return alert('Insira o nome e e-mail do participante!');
-    if(!/\S+@\S+\.\S+/.test(email)) return alert('Insira um e-mail válido!');
-    if(emails.includes(email)) return alert('Este e-mail já está sendo usado por outro participante!');
+    /**
+     * Adiciona um participante na lista.
+     */
+    $scope.adicionarParticipante = function() {
+        // Obtém os dados
+        let nome = $scope.nome.trim();
+        let email = $scope.email.trim().toLowerCase();
 
-    // Adiciona na lista de participantes e de e-mails
-    participantes.push({
-        nome: nome,
-        email: email
-    });
+        // Valida os dados
+        if(!nome.length || !email.length) return alert('Insira o nome e e-mail do participante!');
+        if(!/\S+@\S+\.\S+/.test(email)) return alert('Insira um e-mail válido!');
+        if($scope.participantes.some(p => p.email == email)) return alert('Este e-mail já está sendo usado por outro participante!');
 
-    emails.push(email);
-
-    // Adiciona o participante na tabela
-    let tr = document.createElement('tr');
-    let tdNome = document.createElement('td');
-    let tdEmail = document.createElement('td');
-    let btnRemover = document.createElement('a');
-
-    btnRemover.innerHTML = '&times;';
-    btnRemover.href = '';
-    btnRemover.onclick = function(event) {
-        remover(email, event);
-    };
-
-    tdNome.innerHTML = nome;
-    tdNome.appendChild(btnRemover);
-
-    tdEmail.innerHTML = email;
-
-    tr.appendChild(tdNome);
-    tr.appendChild(tdEmail);
-    tbParticipantes.appendChild(tr);
-
-    inpNome.value = '';
-    inpEmail.value = '';
-}
-
-/**
- * Remove um participante da lista.
- */
-function remover(email, event) {
-    event.preventDefault();
-
-    // Obtém a posição do participante e remove
-    let key = emails.indexOf(email);
-    participantes.splice(key, 1);
-    emails.splice(key, 1);
-
-    // Remove da tabela
-    tbParticipantes.children[key].remove();
-}
-
-/**
- * Faz requisição ao script de sorteio passando os dados.
- */
-function sortear() {
-    if(participantes.length < 3) return alert('Adicione pelo menos 3 participantes!');
-    if(inpNomeSorteio.value.length == 0) return alert('Especifique o nome do sorteio!');
-    if(confirm('Confirma todos os dados para realizar o sorteio?')) {
-        btnSortear.innerHTML = 'Aguarde...';
-        btnSortear.disabled = true;
-
-        $.post('sortear.php', {participantes: participantes, nome: inpNomeSorteio.value}, function(response) {
-            if(response == 'Sucesso!') {
-                btnSortear.innerHTML = 'Sorteio realizado!';
-                alert('Sorteio realizado com sucesso!');
-            } else {
-                btnSortear.innerHTML = 'Realizar sorteio';
-                btnSortear.disabled = false;
-                alert('Ocorreu um erro ao realizar o sorteio!');
-                console.log(response);
-            }
-        }).fail(function(error) {
-            btnSortear.innerHTML = 'Realizar sorteio';
-            btnSortear.disabled = false;
-            alert('Ocorreu um erro ao realizar o sorteio!');
-            console.log(error);
+        // Adiciona na lista de participantes
+        $scope.participantes.push({
+            nome: nome,
+            email: email
         });
-    }
-}
 
-/**
- * Limpa a lista de participantes.
- */
-function limpar() {
-    if(participantes.length == 0) return;
-    if(confirm('Limpar todos os participantes?')) {
-        inpNome.value = '';
-        inpEmail.value = '';
-        tbParticipantes.innerHTML = '';
-        participantes = [];
-        emails = [];
+        // Limpa os campos
+        $scope.nome = '';
+        $scope.email = '';
     }
-}
 
-/**
- * Adiciona participante ao pressionar a tecla ENTER.
- */
-function enter(event) {
-    if(event.keyCode === 13) {
-        adicionar();
+    /**
+     * Remove um participante da lista.
+     */
+    $scope.removerParticipante = function(key) {
+        $scope.participantes.splice(key, 1);
     }
-}
+
+    /**
+     * Limpa a lista de participantes.
+     */
+    $scope.limparParticipantes = function() {
+        if(!$scope.participantes.length) return;
+        if(confirm('Limpar todos os participantes?')) {
+            $scope.participantes = [];
+            $scope.nome = '';
+            $scope.email = '';
+        }
+    }
+
+    /**
+     * Adiciona participante ao pressionar a tecla ENTER.
+     */
+    $scope.enter = function(event) {
+        if(event.keyCode === 13) $scope.adicionarParticipante();
+    }
+
+    /**
+     * Faz requisição ao script de sorteio passando os dados.
+     */
+    $scope.realizarSorteio = function() {
+        // Valida informações
+        if($scope.participantes.length < 3) return alert('Adicione pelo menos 3 participantes!');
+        if(!$scope.sorteio.trim().length) return alert('Especifique o nome do sorteio!');
+
+        // Realiza sorteio
+        if(confirm('Confirma todos os dados para realizar o sorteio?')) {
+            $scope.status = 'Aguarde...';
+            $scope.disabled = true;
+
+            $http({
+                method: 'POST',
+                url: 'sortear.php',
+                data: $httpParamSerializerJQLike({
+                    participantes: $scope.participantes,
+                    nome: $scope.sorteio.trim()
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                }
+            }).then(response => {
+                if(response?.data == 'Sucesso!') {
+                    $scope.status = 'Sorteio realizado!';
+                    alert('Sorteio realizado com sucesso!\nParticipantes, verifiquem suas caixas de e-mail.');
+                } else {
+                    $scope.status = 'Realizar sorteio';
+                    $scope.disabled = false;
+                    alert('Ocorreu um erro ao realizar o sorteio!\nPor favor, tente novamente.');
+                    console.log(response);
+                }
+            }, error => {
+                $scope.status = 'Realizar sorteio';
+                $scope.disabled = false;
+                alert('Ocorreu um erro ao realizar o sorteio!\nPor favor, tente novamente.');
+                console.log(error);
+            });
+        }
+    }
+
+});

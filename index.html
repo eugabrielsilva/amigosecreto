@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app">
 
 <head>
     <meta charset="UTF-8">
@@ -10,16 +10,16 @@
     <title>Sorteador Amigo Secreto</title>
 </head>
 
-<body>
+<body ng-controller="MainController">
     <div class="container">
-        <h1>Sorteador Amigo Secreto</h1>
+        <!-- <h1>Sorteador Amigo Secreto</h1> -->
         <h5>Adicione os participantes:</h5>
         <div class="form">
             <div class="form">
-                <input onkeyup="enter(event)" type="text" id="nome" class="form-control" placeholder="Nome">
-                <input onkeyup="enter(event)" type="email" id="email" class="form-control ml-2" placeholder="E-mail">
-                <button onclick="adicionar()" class="btn btn-success ml-3">Adicionar</button>
-                <button onclick="limpar()" class="btn btn-light ml-2">Limpar</button>
+                <input ng-keydown="enter($event)" type="text" ng-model="nome" class="form-control" placeholder="Nome">
+                <input ng-keydown="enter($event)" type="email" ng-model="email" class="form-control ml-2" placeholder="E-mail">
+                <button ng-click="adicionarParticipante()" class="btn btn-success ml-3">Adicionar</button>
+                <button ng-click="limparParticipantes()" class="btn btn-light ml-2">Limpar</button>
             </div>
         </div>
         <table class="table table-bordered">
@@ -27,19 +27,27 @@
                 <th>Nome</th>
                 <th>E-mail</th>
             </thead>
-            <tbody id="participantes"></tbody>
+            <tbody>
+                <tr ng-repeat="(key, participante) in participantes">
+                    <td>
+                        <span ng-bind="participante.nome"></span>
+                        <a href="" ng-click="removerParticipante(key)">&times;</a>
+                    </td>
+                    <td ng-bind="participante.email"></td>
+                </tr>
+            </tbody>
         </table>
         <div class="form mb-4">
             <div class="form">
-                <input type="text" id="nome-sorteio" class="form-control" placeholder="Nome do sorteio (ex: Natal 25/12)">
-                <button onclick="sortear()" id="sortear" class="btn btn-primary ml-3">Realizar sorteio</button>
+                <input type="text" ng-model="sorteio" class="form-control" placeholder="Nome do sorteio (ex: Natal 25/12)">
+                <button ng-disabled="disabled" ng-click="realizarSorteio()" class="btn btn-primary ml-3" ng-bind="status"></button>
             </div>
         </div>
         <div class="copy">
             Desenvolvido por <a href="https://eugabrielsilva.tk" target="_blank">Gabriel Silva</a>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.3/angular.min.js"></script>
     <script src="script.js"></script>
 </body>
 

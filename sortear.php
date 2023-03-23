@@ -74,7 +74,7 @@ foreach ($participantes as $participante) {
     $mail->clearAddresses();
     $mail->addAddress($participante['email'], $participante['nome']);
     $mail->Body = '<h3>Sorteio Amigo Secreto | ' . $nome . '</h3>
-                   Seu amigo secreto é: <strong>' . $participante['amigo']['nome'] . '</strong>!<br><br>
+                   Seu amigo secreto é: <strong><a href="mailto:' . $participante['amigo']['email'] . '" target="_blank">' . $participante['amigo']['nome'] . '</a></strong>!<br><br>
                    Boa festa!';
     $mail->send();
 }
