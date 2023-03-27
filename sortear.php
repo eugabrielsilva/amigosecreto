@@ -67,7 +67,10 @@ $mail->Password = SMTP_PASSWORD;
 $mail->Port = SMTP_PORT;
 $mail->setFrom(SMTP_USER, 'Amigo Secreto');
 $mail->isHTML();
-$mail->Subject = 'Amigo Secreto | ' . $nome;
+$mail->Subject = 'Sorteio Amigo Secreto | ' . $nome;
+
+// Altera fuso horário para gerar a data correta
+date_default_timezone_set('America/Sao_Paulo');
 
 // Envia e-mails
 foreach ($participantes as $participante) {

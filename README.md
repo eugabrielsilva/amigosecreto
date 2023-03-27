@@ -11,4 +11,4 @@ Esta simples aplicação web tem como objetivo automatizar um sorteio de Amigo S
 Inicialmente, é necessário configurar a conta de e-mail que será usada para disparar os e-mails via SMTP para cada participante. As configurações estão no arquivo `lib/Config.php`. Depois disso a aplicação estará pronta para realizar os sorteios.
 
 ### Créditos
-Desenvolvido por [Gabriel Silva](https://eugabrielsilva.tk).
+Desenvolvido por [Gabriel Silva](https://eugabrielsilva.tk), usando as ferramentas: [Bootstrap](https://getbootstrap.com), [AngularJS](https://angularjs.org) e [PHPMailer](https://github.com/PHPMailer/PHPMailer). Template do e-mail desenvolvido por [Lee Munroe](https://github.com/leemunroe/responsive-html-email-template).
