@@ -73,10 +73,20 @@ $mail->Subject = 'Amigo Secreto | ' . $nome;
 foreach ($participantes as $participante) {
     $mail->clearAddresses();
     $mail->addAddress($participante['email'], $participante['nome']);
-    $mail->Body = '<h3>Sorteio Amigo Secreto | ' . $nome . '</h3>
-                   Seu amigo secreto é: <strong><a href="mailto:' . $participante['amigo']['email'] . '" target="_blank">' . $participante['amigo']['nome'] . '</a></strong>!<br><br>
-                   Boa festa!';
+    $mail->Body = gerarCorpoEmail([
+        'nome' => $nome,
+        'participante' => $participante
+    ]);
     $mail->send();
+}
+
+// Função que pega o corpo do template do e-mail
+function gerarCorpoEmail($dados)
+{
+    ob_start();
+    extract($dados);
+    require('lib/email_template.php');
+    return ob_get_clean();
 }
 
 // Printa resultado final

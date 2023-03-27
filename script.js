@@ -1,5 +1,7 @@
+// Iniciar aplicação
 const app = angular.module('app', []);
 
+// Controlador principal
 app.controller('MainController', function($scope, $http, $httpParamSerializerJQLike) {
 
     // Valores iniciais
